@@ -1,9 +1,11 @@
 <!-- Sangular1 
+	https://github.com/ReidCarlberg/Sangular
 	This is one way to build a simple AngularJS app.
 	Note that this DOES NOT connect to Salesforce in any way.
 	Reid.Carlberg 2013-04-12
 
 	You should be able to run this in localhost with any standard webserver
+
 
 -->
 
@@ -14,42 +16,44 @@
 	<script type="text/javascript">
 		/*
 		declares an app, lists all of the modules that should be available to it.
+		app then encapsulates everything we need while keeping other variables off the global scope.
+
 		*/
         var app = angular.module('sampleApp', ['SampleModule', 'SampleHttpService', 'ObjectFactory', 'MyObject']);
 
         /*
-        defines the app routes
+        defines the app routes -- app route is everything after the hash -- http://localhost/#/route
         */
-		app.config(function ($routeProvider) {
-		    $routeProvider.
-		        when('/', {templateUrl: 'partials/home.html'}).
-		        when('/service', {controller: 'SampleController', templateUrl: 'partials/service.html'}).
-		        when('/object', {controller: 'SampleObjectController', templateUrl: 'partials/object.html'}).
-		        when('/http', {controller: 'SampleHttpController', templateUrl: 'partials/http.html'}).
-		        when('/httpservice', {controller: 'SampleHttpPlusServiceController', templateUrl: 'partials/httpservice.html'}).
-		        when('/directives', {controller: 'DirectivesController', templateUrl: 'partials/directives.html'}).
-		        otherwise({redirectTo: '/'});
-		});        
+    app.config(function ($routeProvider) {
+        $routeProvider.
+            when('/', {templateUrl: 'partials/home.html'}).
+            when('/service', {controller: 'SampleController', templateUrl: 'partials/service.html'}).
+            when('/object', {controller: 'SampleObjectController', templateUrl: 'partials/object.html'}).
+            when('/http', {controller: 'SampleHttpController', templateUrl: 'partials/http.html'}).
+            when('/httpservice', {controller: 'SampleHttpPlusServiceController', templateUrl: 'partials/httpservice.html'}).
+            when('/directives', {controller: 'DirectivesController', templateUrl: 'partials/directives.html'}).
+            otherwise({redirectTo: '/'});
+    });        
 
-		/* 
-		instantiates a MyObject, just in case
-		*/
+    /* 
+    instantiates a MyObject, so you can see how it works.
+    */
         angular.module('MyObject', []).factory('MyObject', function (ObjectFactory) {
-   			var MyObject = ObjectFactory({type: 'Mine'});   	
-    		return MyObject;
-		});
+        var MyObject = ObjectFactory({type: 'Mine'});     
+        return MyObject;
+    });
 
         /*
-        controllers
+        controllers, referenced in the routing table.
         */
         app.controller('SampleController', ['$scope', 'SampleModule', function($scope, SampleModule) {
-        		$scope.contacts = SampleModule.getData();
-        	}
+            $scope.contacts = SampleModule.getData();
+          }
         ]);
 
         app.controller('SampleObjectController', ['$scope', 'MyObject', function($scope, MyObject) {
-        		$scope.contacts = MyObject.getObjectData();
-        	}
+            $scope.contacts = MyObject.getObjectData();
+          }
         ]);
 
         /*
@@ -57,14 +61,14 @@
         contacts.json is just a couple of contacts and should be on local host.
         */
         app.controller('SampleHttpController', ['$scope', '$http', function($scope, $http) {
-				$http({method: "get", url: "contacts.json", cache: false}). 
-					success(function(data) { 
-						$scope.contacts = data;
-					}).
-					error(function() { 
-						console.log('error');
-					});
-	        	}
+        $http({method: "get", url: "contacts.json", cache: false}). 
+          success(function(data) { 
+            $scope.contacts = data;
+          }).
+          error(function() { 
+            console.log('error');
+          });
+            }
         ]);
 
         /*
@@ -72,19 +76,15 @@
         http://stackoverflow.com/questions/13937318/convert-angular-http-get-function-to-a-service
         */
         app.controller('SampleHttpPlusServiceController', ['$scope', 
-        	'SampleHttpService', function($scope, SampleHttpService) {
-	        	SampleHttpService.getData(function(data) {
-	        		$scope.contacts = data;
-	        	});
-        	}
+          'SampleHttpService', function($scope, SampleHttpService) {
+            SampleHttpService.getData(function(data) {
+              $scope.contacts = data;
+            });
+          }
         ]);
 
-        app.controller('DirectivesController', ['$scope', 
-        	function($scope) {
-        		//nothing yet!!
-        	}
-        ]);        
-       
+
+
 
 	</script>
 </head>
@@ -95,7 +95,6 @@
 		| <a href="#/object">Object</a>
 		| <a href="#/http">$http</a>
 		| <a href="#/httpservice">$http In A Service</a>
-		| <a href="#/directives">Directives</a>
 	</p>
 
 	<!-- HTML Partials are injected here -->

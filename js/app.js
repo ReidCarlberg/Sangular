@@ -1,8 +1,13 @@
 /*
-	various declarations that help build modules, all of which are available to the app.
+	Sangular
+  https://github.com/ReidCarlberg/Sangular
+  various declarations that help build modules, all of which are available to the app.
 */
 
-
+/*
+Simplest way to deliver data: encapsulate it in a module.
+This toy example simply returns a JSON string.
+*/
 angular.module('SampleModule', []).
     service('SampleModule', function () {
     	this.getData = function() {
@@ -37,9 +42,9 @@ angular.module('ObjectFactory', []).
 			var type = params.type;
 
 			function AbstractObject(params) {
-				//constructor
+				//constructor--non-toy would do something with the params.
 			}
-
+      //instances of this would all have access to this data.
 			AbstractObject.getObjectData = function() {
 				return [{"Id": "Three", "Name": "NameThree"}, {"Id": "Four", "Name": "NameFour"}];
 			}
@@ -50,58 +55,6 @@ angular.module('ObjectFactory', []).
 		return ObjectFactory;
 	});
 
-// add a namespace for custom directives
-// add a namespace for custom directives
-angular.module('mydirectives', []);
 
-angular.module('mydirectives').directive('simple', function() {
-  return {
-    restrict: 'A',
-    transclude: true,
-    template: '<h1>Simple</h1>'
-  };
-});
 
-function Ctrl2($scope) {
-  $scope.format = 'M/d/yy h:mm:ss a';
-}
- 
-angular.module('time', [])
-  // Register the 'myCurrentTime' directive factory method.
-  // We inject $timeout and dateFilter service since the factory method is DI.
-  .directive('myCurrentTime', function($timeout, dateFilter) {
-    // return the directive link function. (compile function not needed)
-    return function(scope, element, attrs) {
-      var format,  // date format
-          timeoutId; // timeoutId, so that we can cancel the time updates
- 
-      // used to update the UI
-      function updateTime() {
-        element.text(dateFilter(new Date(), format));
-      }
- 
-      // watch the expression, and update the UI on change.
-      scope.$watch(attrs.myCurrentTime, function(value) {
-        format = value;
-        updateTime();
-      });
- 
-      // schedule update in one second
-      function updateLater() {
-        // save the timeoutId for canceling
-        timeoutId = $timeout(function() {
-          updateTime(); // update DOM
-          updateLater(); // schedule another update
-        }, 1000);
-      }
- 
-      // listen on DOM destroy (removal) event, and cancel the next UI update
-      // to prevent updating time after the DOM element was removed.
-      element.bind('$destroy', function() {
-        $timeout.cancel(timeoutId);
-      });
- 
-      updateLater(); // kick off the UI update process.
-    }
-  });
 
